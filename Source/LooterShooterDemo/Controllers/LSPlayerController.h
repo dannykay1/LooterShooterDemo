@@ -19,6 +19,14 @@ public:
 protected:
 	virtual void SetupInputComponent() override;
 
+	void Move(const FInputActionValue& Value);
+	void Look(const FInputActionValue& Value);
+	void Jump();
+	void StopJumping();
+	void Primary();
+	void Secondary();
+	void Interact();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Input")
 	TArray<UInputMappingContext*> DefaultMappingContexts;
 
@@ -39,12 +47,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* InteractAction;
-
-	void Move(const FInputActionValue& Value);
-	void Look(const FInputActionValue& Value);
-	void Jump();
-	void StopJumping();
-	void Primary();
-	void Secondary();
-	void Interact();
 };
