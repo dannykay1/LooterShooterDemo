@@ -7,6 +7,9 @@
 #include "Engine/LocalPlayer.h"
 #include "InputMappingContext.h"
 #include "GameFramework/Character.h"
+#include "LooterShooterDemo/LSDebugHelper.h"
+#include "LooterShooterDemo/Chests/LSChest.h"
+#include "LooterShooterDemo/Pickups/LSPickupItem.h"
 
 #pragma optimize("", off)
 
@@ -38,6 +41,13 @@ void ALSPlayerController::SetupInputComponent()
 
 		// Looking
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
+
+		// Primary/Secondary
+		EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::Primary);
+		EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::Secondary);
+
+		// Interaction
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ThisClass::Interact);
 	}
 }
 
@@ -52,7 +62,7 @@ void ALSPlayerController::Move(const FInputActionValue& Value)
 
 	// get right vector 
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	
+
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 
@@ -97,6 +107,49 @@ void ALSPlayerController::StopJumping()
 	}
 
 	MyCharacter->StopJumping();
+}
+
+void ALSPlayerController::Primary()
+{
+}
+
+void ALSPlayerController::Secondary()
+{
+}
+
+void ALSPlayerController::Interact()
+{
+	TObjectPtr<APawn> MyPawn = GetPawn();
+	if (MyPawn == nullptr)
+	{
+		return;
+	}
+
+	FVector StartLocation;
+	FRotator Direction;
+
+	MyPawn->GetActorEyesViewPoint(StartLocation, Direction);
+
+	FVector EndLocation = StartLocation + (Direction.Vector() * 300.f);
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetPawn());
+
+	if (GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility, Params))
+	{
+		if (ALSChest* Chest = Cast<ALSChest>(Hit.GetActor()))
+		{
+			Chest->SpawnRandomItems();
+			LSDebug::Print( TEXT("Interacted with Chest"));
+		}
+		else if (ALSPickupItem* Pickup = Cast<ALSPickupItem>(Hit.GetActor()))
+		{
+			Pickup->OnPickedUp();
+			LSDebug::Print(TEXT("Picked up item"));
+		}
+	}
 }
 
 #pragma optimize("", on)

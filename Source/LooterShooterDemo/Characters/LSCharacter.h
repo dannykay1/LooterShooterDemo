@@ -18,6 +18,9 @@ protected:
 public:
     virtual void Tick(float DeltaTime) override;
 
+    void Interact();
+    void FireWeapon();
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
     float Health;
 

@@ -7,11 +7,21 @@
 UCLASS()
 class LOOTERSHOOTERDEMO_API ALSGameMode : public AGameModeBase
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    ALSGameMode();
+	ALSGameMode();
 
 protected:
-    virtual void BeginPlay() override;
+	virtual void BeginPlay() override;
+
+private:
+	void SpawnExtractionPoint();
+	void SpawnEnemy();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<class ALSCharacter> EnemyClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<class ALSExtractionPoint> ExtractionPointClass;
 };
