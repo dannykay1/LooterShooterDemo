@@ -6,6 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "LSInteractTraceComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInteractResponseFoundDelegate, AActor*, InteractActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInteractResponseLostDelegate);
+
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class LOOTERSHOOTERDEMO_API ULSInteractTraceComponent : public UActorComponent
@@ -21,17 +24,17 @@ protected:
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+public:
+	UPROPERTY(BlueprintAssignable, Category="InteractTraceComponent")
+	FOnInteractResponseFoundDelegate OnInteractResponseFound;
+	
+	UPROPERTY(BlueprintAssignable, Category="InteractTraceComponent")
+	FOnInteractResponseLostDelegate OnInteractResponseLost;
+
 protected:
 	APawn* GetOwnerPawn();
 	APlayerController* GetOwnerPawnController();
 	void CheckForInteractable();
-	void ShowInteractionUI(bool bShow);
-
-	UPROPERTY(EditDefaultsOnly, Category="InteractTraceComponent")
-	TSubclassOf<UUserWidget> InteractionWidgetClass;
-
-	UPROPERTY(Transient)
-	TObjectPtr<UUserWidget> InteractionWidget;
 
 	UPROPERTY(Transient)
 	TObjectPtr<AActor> CurrentInteractable = nullptr;

@@ -5,7 +5,7 @@
 
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "LooterShooterDemo/Characters/LSCharacter.h"
-#include "LooterShooterDemo/Extraction/LSExtractionPoint.h"
+#include "LooterShooterDemo/World/LSExtractionPoint.h"
 
 #pragma optimize("", off)
 

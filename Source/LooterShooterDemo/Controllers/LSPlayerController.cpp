@@ -8,8 +8,11 @@
 #include "InputMappingContext.h"
 #include "GameFramework/Character.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
-#include "LooterShooterDemo/Chests/LSChest.h"
-#include "LooterShooterDemo/Pickups/LSPickupItem.h"
+#include "LooterShooterDemo/Characters/LSCharacter.h"
+#include "LooterShooterDemo/World/LSChest.h"
+#include "LooterShooterDemo/Components/InteractResponseComponent.h"
+#include "LooterShooterDemo/Utils/LSFunctionLibrary.h"
+#include "LooterShooterDemo/World/LSPickupItem.h"
 
 #pragma optimize("", off)
 
@@ -130,26 +133,29 @@ void ALSPlayerController::Interact()
 
 	MyPawn->GetActorEyesViewPoint(StartLocation, Direction);
 
-	FVector EndLocation = StartLocation + (Direction.Vector() * 300.f);
+	const FVector EndLocation = StartLocation + (Direction.Vector() * 300.f);
 
-	FHitResult Hit;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 	Params.AddIgnoredActor(GetPawn());
 
-	if (GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility, Params))
+	FHitResult Hit;
+
+	const bool bSuccessfulHit = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility, Params);
+	if (!bSuccessfulHit)
 	{
-		if (ALSChest* Chest = Cast<ALSChest>(Hit.GetActor()))
-		{
-			Chest->SpawnRandomItems();
-			LSDebug::Print( TEXT("Interacted with Chest"));
-		}
-		else if (ALSPickupItem* Pickup = Cast<ALSPickupItem>(Hit.GetActor()))
-		{
-			Pickup->OnPickedUp();
-			LSDebug::Print(TEXT("Picked up item"));
-		}
+		return;
 	}
+
+	AActor* HitActor = Hit.GetActor();
+	if (HitActor == nullptr || !HitActor->Implements<ULSInteractInterface>())
+	{
+		return;
+	}
+
+	ILSInteractInterface::Execute_OnInteract(HitActor, Cast<ALSCharacter>(GetPawn()));
+	FText InteractText = ILSInteractInterface::Execute_GetDisplayName(HitActor);
+	LSDebug::Print(InteractText.ToString());
 }
 
 #pragma optimize("", on)

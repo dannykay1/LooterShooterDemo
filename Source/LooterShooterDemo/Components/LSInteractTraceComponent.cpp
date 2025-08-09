@@ -2,9 +2,7 @@
 
 
 #include "LSInteractTraceComponent.h"
-#include "Blueprint/UserWidget.h"
-#include "LooterShooterDemo/Chests/LSChest.h"
-#include "LooterShooterDemo/Pickups/LSPickupItem.h"
+#include "LooterShooterDemo/Interfaces/LSInteractInterface.h"
 
 #pragma optimize("", off)
 
@@ -16,16 +14,6 @@ ULSInteractTraceComponent::ULSInteractTraceComponent()
 void ULSInteractTraceComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (InteractionWidgetClass)
-	{
-		InteractionWidget = CreateWidget<UUserWidget>(GetOwnerPawnController(), InteractionWidgetClass);
-		if (InteractionWidget)
-		{
-			InteractionWidget->AddToViewport();
-			InteractionWidget->SetVisibility(ESlateVisibility::Hidden);
-		}
-	}
 }
 
 void ULSInteractTraceComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -42,7 +30,10 @@ APawn* ULSInteractTraceComponent::GetOwnerPawn()
 APlayerController* ULSInteractTraceComponent::GetOwnerPawnController()
 {
 	APawn* MyPawn = Cast<APawn>(GetOwner());
-	if (!MyPawn) return nullptr;
+	if (MyPawn)
+	{
+		return nullptr;
+	}
 
 	return Cast<APlayerController>(MyPawn->GetController());
 }
@@ -50,45 +41,43 @@ APlayerController* ULSInteractTraceComponent::GetOwnerPawnController()
 void ULSInteractTraceComponent::CheckForInteractable()
 {
 	APawn* MyPawn = Cast<APawn>(GetOwner());
-	if (!MyPawn) return;
+	if (MyPawn == nullptr)
+	{
+		return;
+	}
 
 	FVector Location;
 	FRotator Rotation;
 	MyPawn->GetActorEyesViewPoint(Location, Rotation);
 
-	FVector End = Location + (Rotation.Vector() * 300.f);
+	const FVector End = Location + (Rotation.Vector() * 2000.f);
 
-	FHitResult HitResult;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(MyPawn);
 
+	FHitResult HitResult;
+
 	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_Visibility, Params);
-
-	if (bHit)
+	if (!bHit)
 	{
-		AActor* HitActor = HitResult.GetActor();
-
-		// Check if the actor is interactable (chest or pickup)
-		if (HitActor && (HitActor->IsA(ALSChest::StaticClass()) || HitActor->IsA(ALSPickupItem::StaticClass())))
-		{
-			bCanInteract = true;
-			CurrentInteractable = HitActor;
-			ShowInteractionUI(true);
-			return;
-		}
+		bCanInteract = false;
+		CurrentInteractable = nullptr;
+		OnInteractResponseLost.Broadcast();
+		return;
 	}
 
-	// No interactable found
-	bCanInteract = false;
-	CurrentInteractable = nullptr;
-	ShowInteractionUI(false);
-}
+	AActor* HitActor = HitResult.GetActor();
+	if (HitActor == nullptr || !HitActor->Implements<ULSInteractInterface>())
+	{
+		bCanInteract = false;
+		CurrentInteractable = nullptr;
+		OnInteractResponseLost.Broadcast();
+		return;
+	}
 
-void ULSInteractTraceComponent::ShowInteractionUI(bool bShow)
-{
-	if (!InteractionWidget) return;
-
-	InteractionWidget->SetVisibility(bShow ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	bCanInteract = true;
+	CurrentInteractable = HitActor;
+	OnInteractResponseFound.Broadcast(HitActor);
 }
 
 #pragma optimize("", on)

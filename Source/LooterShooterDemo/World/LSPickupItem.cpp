@@ -41,7 +41,17 @@ void ALSPickupItem::BeginPlay()
 	}
 }
 
-void ALSPickupItem::OnPickedUp()
+FText ALSPickupItem::GetDisplayName_Implementation()
+{
+	return FText::FromString("Pickup");
+}
+
+UTexture2D* ALSPickupItem::GetIcon_Implementation()
+{
+	return nullptr;
+}
+
+void ALSPickupItem::OnInteract_Implementation(ALSCharacter* InteractingCharacter)
 {
 	LSDebug::Print(FString::Printf(TEXT("Picked up %s"), *UEnum::GetValueAsString(ItemType)));
 	Destroy();

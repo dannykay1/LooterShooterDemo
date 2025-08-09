@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "LooterShooterDemo/Interfaces/LSInteractInterface.h"
 #include "LSChest.generated.h"
 
 UCLASS()
-class LOOTERSHOOTERDEMO_API ALSChest : public AActor
+class LOOTERSHOOTERDEMO_API ALSChest : public AActor, public ILSInteractInterface
 {
 	GENERATED_BODY()
 
@@ -19,7 +20,12 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-private:
+public:	
+	virtual FText GetDisplayName_Implementation() override;
+	virtual UTexture2D* GetIcon_Implementation() override;
+	virtual void OnInteract_Implementation(ALSCharacter* InteractingCharacter) override;
+
+protected:
 	UPROPERTY(EditDefaultsOnly, Category="Chest")
 	TSubclassOf<class ALSPickupItem> PickupItemClass;
 

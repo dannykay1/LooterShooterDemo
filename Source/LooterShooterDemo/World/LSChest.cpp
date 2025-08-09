@@ -5,7 +5,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
-#include "LooterShooterDemo/Pickups/LSPickupItem.h"
+#include "LooterShooterDemo/LSDebugHelper.h"
+#include "LooterShooterDemo/World/LSPickupItem.h"
 
 #pragma optimize("", off)
 
@@ -20,6 +21,21 @@ ALSChest::ALSChest()
 void ALSChest::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+FText ALSChest::GetDisplayName_Implementation()
+{
+	return FText::FromString("Chest");
+}
+
+UTexture2D* ALSChest::GetIcon_Implementation()
+{
+	return nullptr;
+}
+
+void ALSChest::OnInteract_Implementation(ALSCharacter* InteractingCharacter)
+{
+	SpawnRandomItems();
 }
 
 void ALSChest::SpawnRandomItems()
@@ -41,14 +57,11 @@ void ALSChest::SpawnRandomItems()
 		{
 			// Randomize item type per spawn
 			int32 RandType = UKismetMathLibrary::RandomIntegerInRange(0, 2);
-			SpawnedItem->ItemType = static_cast<EItemType>(RandType);
+			//SpawnedItem->ItemType = static_cast<EItemType>(RandType);
 		}
 	}
 
-	if(GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("Chest spawned items"));
-	}
+	LSDebug::Print(TEXT("Chest spawned items"));
 }
 
 #pragma optimize("", on)

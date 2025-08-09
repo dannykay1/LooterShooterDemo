@@ -17,7 +17,11 @@ public class LooterShooterDemo : ModuleRules
 			"AIModule",
 			"StateTreeModule",
 			"GameplayStateTreeModule",
-			"UMG"
+			"GameplayTags",
+			"UMG",
+			"CommonUI",
+			"DeveloperSettings",
+			"CommonInput"
 		});
 
 		PrivateDependencyModuleNames.AddRange(new string[] { });
