@@ -9,8 +9,6 @@
 #include "GameFramework/Character.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
 #include "LooterShooterDemo/Characters/LSCharacter.h"
-#include "LooterShooterDemo/World/LSChest.h"
-#include "LooterShooterDemo/Components/InteractResponseComponent.h"
 #include "LooterShooterDemo/Utils/LSFunctionLibrary.h"
 #include "LooterShooterDemo/World/LSPickupItem.h"
 
