@@ -9,6 +9,8 @@
 #include "GameFramework/Character.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
 #include "LooterShooterDemo/Characters/LSCharacter.h"
+#include "LooterShooterDemo/Components/LSEquipmentComponent.h"
+#include "LooterShooterDemo/Items/LSItemActor.h"
 #include "LooterShooterDemo/Utils/LSFunctionLibrary.h"
 #include "LooterShooterDemo/World/LSPickupItem.h"
 
@@ -44,12 +46,29 @@ void ALSPlayerController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, this, &ThisClass::Look);
 
 		// Primary/Secondary
-		EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::Primary);
-		EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::Secondary);
+		EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::StartUsingPrimaryItem);
+		EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Completed, this, &ThisClass::StopUsingPrimaryItem);
+
+		EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Started, this, &ThisClass::StartUsingSecondaryItem);
+		EnhancedInputComponent->BindAction(SecondaryAction, ETriggerEvent::Completed, this, &ThisClass::StopUsingSecondaryItem);
+
+		// Grenade
+		EnhancedInputComponent->BindAction(PrimaryAction, ETriggerEvent::Started, this, &ThisClass::UseGrenadeItem);
 
 		// Interaction
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &ThisClass::Interact);
 	}
+}
+
+ULSEquipmentComponent* ALSPlayerController::GetEquipmentComonent()
+{
+	TObjectPtr<APawn> MyPawn = GetPawn();
+	if (MyPawn == nullptr)
+	{
+		return nullptr;
+	}
+
+	return MyPawn->GetComponentByClass<ULSEquipmentComponent>();
 }
 
 void ALSPlayerController::Move(const FInputActionValue& Value)
@@ -59,10 +78,10 @@ void ALSPlayerController::Move(const FInputActionValue& Value)
 	{
 		return;
 	}
-	
+
 	const FRotator Rotation = GetControlRotation();
 	const FRotator YawRotation(0, Rotation.Yaw, 0);
-	
+
 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -102,12 +121,49 @@ void ALSPlayerController::StopJumping()
 	MyCharacter->StopJumping();
 }
 
-void ALSPlayerController::Primary()
+void ALSPlayerController::StartUsingPrimaryItem()
 {
+	ULSEquipmentComponent* EquipmentComponent = GetEquipmentComonent();
+	if (EquipmentComponent && EquipmentComponent->PrimarySlot.ItemActor)
+	{
+		EquipmentComponent->PrimarySlot.ItemActor->StartPrimaryAction();
+	}
 }
 
-void ALSPlayerController::Secondary()
+void ALSPlayerController::StopUsingPrimaryItem()
 {
+	ULSEquipmentComponent* EquipmentComponent = GetEquipmentComonent();
+	if (EquipmentComponent && EquipmentComponent->PrimarySlot.ItemActor)
+	{
+		EquipmentComponent->PrimarySlot.ItemActor->StopPrimaryAction();
+	}
+}
+
+void ALSPlayerController::StartUsingSecondaryItem()
+{
+	ULSEquipmentComponent* EquipmentComponent = GetEquipmentComonent();
+	if (EquipmentComponent && EquipmentComponent->SecondarySlot.ItemActor)
+	{
+		EquipmentComponent->SecondarySlot.ItemActor->StartSecondaryAction();
+	}
+}
+
+void ALSPlayerController::StopUsingSecondaryItem()
+{
+	ULSEquipmentComponent* EquipmentComponent = GetEquipmentComonent();
+	if (EquipmentComponent && EquipmentComponent->SecondarySlot.ItemActor)
+	{
+		EquipmentComponent->SecondarySlot.ItemActor->StopSecondaryAction();
+	}
+}
+
+void ALSPlayerController::UseGrenadeItem()
+{
+	ULSEquipmentComponent* EquipmentComponent = GetEquipmentComonent();
+	if (EquipmentComponent && EquipmentComponent->GrenadeSlot.ItemActor)
+	{
+		EquipmentComponent->GrenadeSlot.ItemActor->StartPrimaryAction();
+	}
 }
 
 void ALSPlayerController::Interact()

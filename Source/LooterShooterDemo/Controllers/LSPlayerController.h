@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "LSPlayerController.generated.h"
 
+class ULSEquipmentComponent;
 class UInputAction;
 class UInputMappingContext;
 
@@ -18,13 +19,17 @@ public:
 
 protected:
 	virtual void SetupInputComponent() override;
+	ULSEquipmentComponent* GetEquipmentComonent();
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump();
 	void StopJumping();
-	void Primary();
-	void Secondary();
+	void StartUsingPrimaryItem();
+	void StopUsingPrimaryItem();
+	void StartUsingSecondaryItem();
+	void StopUsingSecondaryItem();
+	void UseGrenadeItem();
 	void Interact();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category ="Input")

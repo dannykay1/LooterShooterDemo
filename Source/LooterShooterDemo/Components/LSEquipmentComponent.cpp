@@ -2,8 +2,6 @@
 
 
 #include "LSEquipmentComponent.h"
-#include "Engine/AssetManager.h"
-#include "LooterShooterDemo/LSDebugHelper.h"
 #include "LooterShooterDemo/Items/LSItemActor.h"
 
 #pragma optimize("", off)
@@ -31,20 +29,7 @@ USkeletalMeshComponent* ULSEquipmentComponent::GetSkeletalMeshComponentFromOwner
 
 void ULSEquipmentComponent::EquipItem(FItemData* ItemData)
 {
-	if (ItemData == nullptr || ItemData->ItemActorClass.IsNull())
-	{
-		return;
-	}
-
-	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
-		ItemData->ItemActorClass.ToSoftObjectPath(),
-		FStreamableDelegate::CreateUObject(this, &ULSEquipmentComponent::OnItemClassLoaded, ItemData)
-	);
-}
-
-void ULSEquipmentComponent::OnItemClassLoaded(FItemData* ItemData)
-{	
-	if (ItemData == nullptr || !ItemData->ItemActorClass.IsValid())
+	if (ItemData == nullptr || !ItemData->ItemActorClass)
 	{
 		return;
 	}
@@ -58,23 +43,25 @@ void ULSEquipmentComponent::OnItemClassLoaded(FItemData* ItemData)
 	AActor* MyOwner = GetOwner();
 	FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform(ItemData->SocketEquipName);
 
-	ALSItemActor* Item = GetWorld()->SpawnActorDeferred<ALSItemActor>(
-		ItemData->ItemActorClass.Get(),
+	ALSItemActor* ItemActor = GetWorld()->SpawnActorDeferred<ALSItemActor>(
+		ItemData->ItemActorClass,
 		SpawnTransform,
 		MyOwner,
 		Cast<APawn>(MyOwner),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
 
-	if (Item == nullptr)
+	if (ItemActor == nullptr)
 	{
 		return;
 	}
 
-	Item->SetItemStack(nullptr);
-	Item->FinishSpawning(SpawnTransform);
+	ItemActor->SetItemStack(nullptr);
+	ItemActor->FinishSpawning(SpawnTransform);
 
-	Item->AttachToComponent(SkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemData->SocketEquipName);
+	ItemActor->AttachToComponent(SkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemData->SocketEquipName);
+
+	PrimarySlot.ItemActor = ItemActor;
 }
 
 #pragma optimize("", on)

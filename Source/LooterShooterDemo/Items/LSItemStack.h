@@ -21,7 +21,7 @@ public:
 	FItemData* GetItemData();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
-	FDataTableRowHandle ItemData;
+	FDataTableRowHandle ItemRowHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
 	int32 Quantity;

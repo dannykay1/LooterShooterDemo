@@ -12,18 +12,18 @@ ULSItemStack::ULSItemStack()
 
 void ULSItemStack::InitializeItem(const FDataTableRowHandle& InItemData, int32 InQuantity)
 {
-	ItemData = InItemData;
+	ItemRowHandle = InItemData;
 	Quantity = InQuantity;
 }
 
 FItemData* ULSItemStack::GetItemData()
 {
-	if (ItemData.IsNull())
+	if (ItemRowHandle.IsNull())
 	{
 		return nullptr;
 	}
 
-	return ItemData.GetRow<FItemData>("ItemStack Lookup");
+	return ItemRowHandle.GetRow<FItemData>("ItemStack Lookup");
 }
 
 #pragma optimize("", on)

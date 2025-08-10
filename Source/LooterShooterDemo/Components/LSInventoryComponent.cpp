@@ -24,8 +24,8 @@ ULSItemStack* ULSInventoryComponent::FindItem(const FDataTableRowHandle& ItemDat
 	ULSItemStack** Result = Items.FindByPredicate([&](ULSItemStack* Stack)
 	{
 		return Stack &&
-			Stack->ItemData.DataTable == ItemData.DataTable &&
-			Stack->ItemData.RowName == ItemData.RowName;
+			Stack->ItemRowHandle.DataTable == ItemData.DataTable &&
+			Stack->ItemRowHandle.RowName == ItemData.RowName;
 	});
 
 	if (Result)

@@ -3,11 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Engine/DataTable.h"
 #include "LSItemData.generated.h"
 
 class ULSInputConfig;
 class ALSItemActor;
+class UStaticMesh;
+class USkeletalMesh;
 
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
@@ -31,7 +34,16 @@ struct FItemData : public FTableRowBase
 	TObjectPtr<UTexture2D> Icon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftClassPtr<ALSItemActor> ItemActorClass;
+	TSubclassOf<ALSItemActor> ItemActorClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTagContainer TagContainer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UStaticMesh> StaticMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<USkeletalMesh> SkeletalMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<ULSInputConfig> InputConfig;

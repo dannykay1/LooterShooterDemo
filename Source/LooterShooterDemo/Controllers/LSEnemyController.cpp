@@ -17,18 +17,6 @@ void ALSEnemyController::BeginPlay()
 {
 	Super::BeginPlay();
 
-	TObjectPtr<APawn> MyPawn = GetPawn();
-	if (MyPawn)
-	{
-		MyPawn->bUseControllerRotationYaw = true;
-
-		UCharacterMovementComponent* Movement = MyPawn->GetComponentByClass<UCharacterMovementComponent>();
-		if (Movement)
-		{
-			Movement->bOrientRotationToMovement = false;
-		}
-	}
-
 	PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	SetFocus(PlayerPawn);
 
