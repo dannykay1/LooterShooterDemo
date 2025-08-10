@@ -31,13 +31,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="InteractTraceComponent")
 	FOnInteractResponseLostDelegate OnInteractResponseLost;
 
+	UPROPERTY(Transient)
+	TObjectPtr<AActor> CurrentInteractable = nullptr;
+
 protected:
 	APawn* GetOwnerPawn();
 	APlayerController* GetOwnerPawnController();
 	void CheckForInteractable();
-
-	UPROPERTY(Transient)
-	TObjectPtr<AActor> CurrentInteractable = nullptr;
 
 	bool bCanInteract = false;
 };

@@ -24,4 +24,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
 	static ULSEquipmentComponent* GetEquipmentComponent(AActor* SourceActor);
+
+	UFUNCTION(BlueprintPure, Category = "LS Function Library")
+	static bool GetPlayerEyesViewPoint(AActor* Player, FVector& OutLocation, FRotator& OutRotation);
+
+	UFUNCTION(BlueprintPure, Category = "LS Function Library")
+	static AActor* GetCurrentInteractable(AActor* Player);
 };

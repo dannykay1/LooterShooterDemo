@@ -29,24 +29,23 @@ USkeletalMeshComponent* ULSEquipmentComponent::GetSkeletalMeshComponentFromOwner
 	return MyOwner->GetComponentByClass<USkeletalMeshComponent>();
 }
 
-void ULSEquipmentComponent::EquipItem(TSoftClassPtr<ALSItemActor> ItemClassToEquip)
+void ULSEquipmentComponent::EquipItem(FItemData* ItemData)
 {
-	if (ItemClassToEquip.IsNull())
+	if (ItemData == nullptr || ItemData->ItemActorClass.IsNull())
 	{
 		return;
 	}
 
 	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
-		ItemClassToEquip.ToSoftObjectPath(),
-		FStreamableDelegate::CreateUObject(this, &ULSEquipmentComponent::OnItemClassLoaded, ItemClassToEquip)
+		ItemData->ItemActorClass.ToSoftObjectPath(),
+		FStreamableDelegate::CreateUObject(this, &ULSEquipmentComponent::OnItemClassLoaded, ItemData)
 	);
 }
 
-void ULSEquipmentComponent::OnItemClassLoaded(TSoftClassPtr<ALSItemActor> LoadedItemClass)
-{
-	if (!LoadedItemClass.IsValid())
+void ULSEquipmentComponent::OnItemClassLoaded(FItemData* ItemData)
+{	
+	if (ItemData == nullptr || !ItemData->ItemActorClass.IsValid())
 	{
-		LSDebug::Print(TEXT("Failed to async load item class"));
 		return;
 	}
 
@@ -57,10 +56,10 @@ void ULSEquipmentComponent::OnItemClassLoaded(TSoftClassPtr<ALSItemActor> Loaded
 	}
 
 	AActor* MyOwner = GetOwner();
-	FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform("Rifle");
+	FTransform SpawnTransform = SkeletalMeshComponent->GetSocketTransform(ItemData->SocketEquipName);
 
 	ALSItemActor* Item = GetWorld()->SpawnActorDeferred<ALSItemActor>(
-		LoadedItemClass.Get(),
+		ItemData->ItemActorClass.Get(),
 		SpawnTransform,
 		MyOwner,
 		Cast<APawn>(MyOwner),
@@ -74,6 +73,8 @@ void ULSEquipmentComponent::OnItemClassLoaded(TSoftClassPtr<ALSItemActor> Loaded
 
 	Item->SetItemStack(nullptr);
 	Item->FinishSpawning(SpawnTransform);
+
+	Item->AttachToComponent(SkeletalMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, ItemData->SocketEquipName);
 }
 
 #pragma optimize("", on)

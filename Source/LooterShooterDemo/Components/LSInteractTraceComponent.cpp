@@ -3,6 +3,7 @@
 
 #include "LSInteractTraceComponent.h"
 #include "LooterShooterDemo/Interfaces/LSInteractInterface.h"
+#include "LooterShooterDemo/Utils/LSFunctionLibrary.h"
 
 #pragma optimize("", off)
 
@@ -46,18 +47,18 @@ void ULSInteractTraceComponent::CheckForInteractable()
 		return;
 	}
 
-	FVector Location;
-	FRotator Rotation;
-	MyPawn->GetActorEyesViewPoint(Location, Rotation);
+	FVector StartLocation;
+	FRotator Direction;
+	ULSFunctionLibrary::GetPlayerEyesViewPoint(GetOwner(), StartLocation, Direction);
 
-	const FVector End = Location + (Rotation.Vector() * 2000.f);
+	FVector EndLocation = StartLocation + (Direction.Vector() * 2000.f);
 
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(MyPawn);
 
 	FHitResult HitResult;
 
-	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, Location, End, ECC_Visibility, Params);
+	bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility, Params);
 	if (!bHit)
 	{
 		bCanInteract = false;

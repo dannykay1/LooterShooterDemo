@@ -26,28 +26,6 @@ void ALSCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FVector ALSCharacter::GetPawnViewLocation() const
-{
-	UCameraComponent* CameraComponent = GetComponentByClass<UCameraComponent>();
-	if (CameraComponent)
-	{
-		return CameraComponent->GetComponentLocation();
-	}
-
-	return Super::GetPawnViewLocation();
-}
-
-FRotator ALSCharacter::GetViewRotation() const
-{
-	UCameraComponent* CameraComponent = GetComponentByClass<UCameraComponent>();
-	if (CameraComponent)
-	{
-		return CameraComponent->GetComponentRotation();
-	}
-
-	return Super::GetViewRotation();
-}
-
 void ALSCharacter::Interact()
 {
 	LSDebug::Print(TEXT("Interacted!"));

@@ -18,9 +18,6 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	virtual FVector GetPawnViewLocation() const override;
-	virtual FRotator GetViewRotation() const override;
-
 	void Interact();
 	void FireWeapon();
 

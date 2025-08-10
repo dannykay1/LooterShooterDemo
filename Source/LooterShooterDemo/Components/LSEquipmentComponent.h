@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "LooterShooterDemo/Data/LSItemData.h"
 #include "LSEquipmentComponent.generated.h"
 
 class ALSItemActor;
@@ -22,8 +23,8 @@ protected:
 	USkeletalMeshComponent* GetSkeletalMeshComponentFromOwner();
 
 public:
-	void EquipItem(TSoftClassPtr<ALSItemActor> ItemClassToEquip);
-	void OnItemClassLoaded(TSoftClassPtr<ALSItemActor> LoadedItemClass);
+	void EquipItem(FItemData* ItemData);
+	void OnItemClassLoaded(FItemData* ItemData);
 	
 	UPROPERTY(BlueprintReadOnly, Category = "EquipmentComponent")
 	TArray<TObjectPtr<ALSItemActor>> EquippedItems;

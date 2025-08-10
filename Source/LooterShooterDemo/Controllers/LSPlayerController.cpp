@@ -128,33 +128,19 @@ void ALSPlayerController::Interact()
 		return;
 	}
 
-	FVector StartLocation;
-	FRotator Direction;
-
-	MyPawn->GetActorEyesViewPoint(StartLocation, Direction);
-
-	const FVector EndLocation = StartLocation + (Direction.Vector() * 300.f);
-
-	FCollisionQueryParams Params;
-	Params.AddIgnoredActor(this);
-	Params.AddIgnoredActor(GetPawn());
-
-	FHitResult Hit;
-
-	const bool bSuccessfulHit = GetWorld()->LineTraceSingleByChannel(Hit, StartLocation, EndLocation, ECC_Visibility, Params);
-	if (!bSuccessfulHit)
+	AActor* Interactable = ULSFunctionLibrary::GetCurrentInteractable(MyPawn);
+	if (Interactable == nullptr)
 	{
 		return;
 	}
 
-	AActor* HitActor = Hit.GetActor();
-	if (HitActor == nullptr || !HitActor->Implements<ULSInteractInterface>())
+	if (!Interactable->Implements<ULSInteractInterface>())
 	{
 		return;
 	}
 
-	ILSInteractInterface::Execute_OnInteract(HitActor, Cast<ALSCharacter>(GetPawn()));
-	FText InteractText = ILSInteractInterface::Execute_GetDisplayName(HitActor);
+	ILSInteractInterface::Execute_OnInteract(Interactable, Cast<ALSCharacter>(GetPawn()));
+	FText InteractText = ILSInteractInterface::Execute_GetDisplayName(Interactable);
 	LSDebug::Print(InteractText.ToString());
 }
 

@@ -70,7 +70,7 @@ ULSItemStack* ULSInventoryComponent::AddItem(const FDataTableRowHandle& ItemData
 		return nullptr;
 	}
 
-	EquipmentComponent->EquipItem(ItemStackData->ItemActorClass);
+	EquipmentComponent->EquipItem(ItemStackData);
 
 	return NewStack;
 }
