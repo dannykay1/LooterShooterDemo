@@ -6,6 +6,9 @@
 #include "Engine/DataTable.h"
 #include "LSItemData.generated.h"
 
+class ULSInputConfig;
+class ALSItemActor;
+
 USTRUCT(BlueprintType)
 struct FItemData : public FTableRowBase
 {
@@ -13,26 +16,26 @@ struct FItemData : public FTableRowBase
 
 	FItemData()
 	{
-		Guid = FGuid::NewGuid();
-		DisplayName = FText::GetEmpty();
+		DisplayName = FText::FromString("Display Name");
+		Description = FText::FromString("Description");
+		SocketEquipName = FName("Socket Name Here");
 	}
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGuid Guid;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText DisplayName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText Description;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UTexture2D> Icon;
 
-	bool operator==(const FItemData& Other) const
-	{
-		return Guid == Other.Guid;
-	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSoftClassPtr<ALSItemActor> ItemActorClass;
 
-	bool operator!=(const FItemData& Other) const
-	{
-		return !(*this == Other);
-	}
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ULSInputConfig> InputConfig;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName SocketEquipName;
 };

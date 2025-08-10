@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "LooterShooterDemo/Data/LSItemData.h"
 #include "LSItemStack.generated.h"
 
 UCLASS(BlueprintType)
@@ -13,13 +14,17 @@ class LOOTERSHOOTERDEMO_API ULSItemStack : public UObject
 	
 public:
 	ULSItemStack();
+
+	UFUNCTION(BlueprintCallable, Category = "Items")
+	void InitializeItem(const FDataTableRowHandle& InItemData, int32 InQuantity = 1);
+
+	FItemData* GetItemData();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
 	FDataTableRowHandle ItemData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Items")
 	int32 Quantity;
 	
-	UFUNCTION(BlueprintCallable, Category = "Item")
-	void InitializeItem(const FDataTableRowHandle& InItemData, int32 InQuantity = 1);
+	
 };

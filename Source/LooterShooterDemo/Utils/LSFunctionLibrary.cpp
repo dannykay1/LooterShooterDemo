@@ -3,6 +3,8 @@
 
 #include "LSFunctionLibrary.h"
 #include "LooterShooterDemo/Components/InteractResponseComponent.h"
+#include "LooterShooterDemo/Components/LSInventoryComponent.h"
+#include "LooterShooterDemo/Components/LSEquipmentComponent.h"
 
 #pragma optimize("", on)
 
@@ -12,30 +14,28 @@ UInteractResponseComponent* ULSFunctionLibrary::GetInteractResponseComponent(AAc
 	{
 		return nullptr;
 	}
-	
+
 	return SourceActor->GetComponentByClass<UInteractResponseComponent>();
 }
 
-FItemData* ULSFunctionLibrary::GetItemData(AActor* SourceActor)
+ULSInventoryComponent* ULSFunctionLibrary::GetInventoryComponent(AActor* SourceActor)
 {
-	if (UInteractResponseComponent* InteractResponseComponent = GetInteractResponseComponent(SourceActor))
+	if (SourceActor)
 	{
-		return InteractResponseComponent->GetItemData();
+		return nullptr;
 	}
 
-	return nullptr;
+	return SourceActor->GetComponentByClass<ULSInventoryComponent>();
 }
 
-bool ULSFunctionLibrary::BP_GetItemData(AActor* SourceActor, FItemData& ItemData)
+ULSEquipmentComponent* ULSFunctionLibrary::GetEquipmentComponent(AActor* SourceActor)
 {
-	if (FItemData* Data = GetItemData(SourceActor))
+	if (SourceActor)
 	{
-		ItemData = *Data;
-		return true;
+		return nullptr;
 	}
 
-	ItemData = FItemData();
-	return false;
+	return SourceActor->GetComponentByClass<ULSEquipmentComponent>();
 }
 
 #pragma optimize("", on)

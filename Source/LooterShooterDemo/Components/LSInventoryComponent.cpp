@@ -2,6 +2,8 @@
 
 
 #include "LSInventoryComponent.h"
+
+#include "LSEquipmentComponent.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
 #include "LooterShooterDemo/Items/LSItemStack.h"
 
@@ -42,21 +44,33 @@ ULSItemStack* ULSInventoryComponent::AddItem(const FDataTableRowHandle& ItemData
 		return nullptr;
 	}
 
-	// Check if item already exists
-	ULSItemStack* ExistingStack = FindItem(ItemData);
-	if (ExistingStack)
-	{
-		ExistingStack->Quantity += Quantity;
-		return ExistingStack;
-	}
+	// ULSItemStack* ExistingStack = FindItem(ItemData);
+	// if (ExistingStack)
+	// {
+	// 	ExistingStack->Quantity += Quantity;
+	// 	return ExistingStack;
+	// }
 
-	// Create new stack
 	ULSItemStack* NewStack = NewObject<ULSItemStack>(this);
 	if (NewStack)
 	{
 		NewStack->InitializeItem(ItemData, Quantity);
 		Items.Add(NewStack);
 	}
+
+	FItemData* ItemStackData = NewStack->GetItemData();
+	if (ItemStackData == nullptr)
+	{
+		return nullptr;
+	}
+
+	ULSEquipmentComponent* EquipmentComponent = GetOwner()->GetComponentByClass<ULSEquipmentComponent>();
+	if (EquipmentComponent == nullptr)
+	{
+		return nullptr;
+	}
+
+	EquipmentComponent->EquipItem(ItemStackData->ItemActorClass);
 
 	return NewStack;
 }

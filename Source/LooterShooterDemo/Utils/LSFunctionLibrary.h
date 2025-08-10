@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "LooterShooterDemo/Data/LSItemData.h"
 #include "LSFunctionLibrary.generated.h"
 
+class ULSEquipmentComponent;
+class ULSInventoryComponent;
 class UInteractResponseComponent;
 
 UCLASS()
@@ -18,8 +19,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
 	static UInteractResponseComponent* GetInteractResponseComponent(AActor* SourceActor);
 
-	static FItemData* GetItemData(AActor* SourceActor);
+	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
+	static ULSInventoryComponent* GetInventoryComponent(AActor* SourceActor);
 
-	UFUNCTION(BlueprintCallable, DisplayName = "Get Item Data", Category = "LS Function Library", meta = (ExpandBoolAsExecs = "ReturnValue"))
-	static bool BP_GetItemData(AActor* SourceActor, FItemData& ItemData);
+	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
+	static ULSEquipmentComponent* GetEquipmentComponent(AActor* SourceActor);
 };
