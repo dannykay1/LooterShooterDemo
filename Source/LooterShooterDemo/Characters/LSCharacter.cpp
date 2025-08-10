@@ -2,6 +2,8 @@
 
 
 #include "LSCharacter.h"
+
+#include "Camera/CameraComponent.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
 
 #pragma optimize("", off)
@@ -22,6 +24,28 @@ void ALSCharacter::BeginPlay()
 void ALSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+FVector ALSCharacter::GetPawnViewLocation() const
+{
+	UCameraComponent* CameraComponent = GetComponentByClass<UCameraComponent>();
+	if (CameraComponent)
+	{
+		return CameraComponent->GetComponentLocation();
+	}
+
+	return Super::GetPawnViewLocation();
+}
+
+FRotator ALSCharacter::GetViewRotation() const
+{
+	UCameraComponent* CameraComponent = GetComponentByClass<UCameraComponent>();
+	if (CameraComponent)
+	{
+		return CameraComponent->GetComponentRotation();
+	}
+
+	return Super::GetViewRotation();
 }
 
 void ALSCharacter::Interact()

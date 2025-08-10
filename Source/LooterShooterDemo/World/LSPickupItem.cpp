@@ -29,13 +29,7 @@ UTexture2D* ALSPickupItem::GetIcon_Implementation()
 }
 
 void ALSPickupItem::OnInteract_Implementation(ALSCharacter* InteractingCharacter)
-{
-	FItemData* ItemData = ItemRowHandle.GetRow<FItemData>("Pickup On Interact");
-	if (ItemData == nullptr)
-	{
-		return;
-	}
-	
+{	
 	if (InteractingCharacter == nullptr)
 	{
 		return;
@@ -47,7 +41,9 @@ void ALSPickupItem::OnInteract_Implementation(ALSCharacter* InteractingCharacter
 		return;
 	}
 
-	InventoryComponent->AddItem(*ItemData);
+	InventoryComponent->AddItem(ItemRowHandle);
+
+	Destroy();
 }
 
 #pragma optimize("", on)

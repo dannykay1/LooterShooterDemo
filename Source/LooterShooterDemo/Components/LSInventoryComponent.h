@@ -7,6 +7,8 @@
 #include "LooterShooterDemo/Data/LSItemData.h"
 #include "LSInventoryComponent.generated.h"
 
+class ULSItemStack;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class LOOTERSHOOTERDEMO_API ULSInventoryComponent : public UActorComponent
 {
@@ -19,13 +21,15 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category="Inventory")
-	void AddItem(const FItemData& ItemToAdd);
-
-	UFUNCTION(BlueprintCallable, Category="Inventory")
-	bool RemoveItem(const FItemData& ItemToRemove);
-
-protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Inventory")
-	TArray<FItemData> Items;
+	TArray<ULSItemStack*> Items;
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	ULSItemStack* FindItem(const FDataTableRowHandle& ItemData);
+	
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	ULSItemStack* AddItem(const FDataTableRowHandle& ItemData, int32 Quantity = 1);
+
+	UFUNCTION(BlueprintCallable, Category="Inventory")
+	bool RemoveItem(ULSItemStack* ItemStack);
 };

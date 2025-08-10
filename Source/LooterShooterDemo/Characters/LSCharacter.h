@@ -7,23 +7,26 @@
 UCLASS()
 class LOOTERSHOOTERDEMO_API ALSCharacter : public ACharacter
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    ALSCharacter();
+	ALSCharacter();
 
 protected:
-    virtual void BeginPlay() override;
+	virtual void BeginPlay() override;
 
 public:
-    virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaTime) override;
 
-    void Interact();
-    void FireWeapon();
+	virtual FVector GetPawnViewLocation() const override;
+	virtual FRotator GetViewRotation() const override;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
-    float Health;
+	void Interact();
+	void FireWeapon();
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Role")
-    bool bIsPlayerControlled;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Role")
+	bool bIsPlayerControlled;
 };

@@ -2,6 +2,8 @@
 
 
 #include "LSInventoryComponent.h"
+#include "LooterShooterDemo/LSDebugHelper.h"
+#include "LooterShooterDemo/Items/LSItemStack.h"
 
 #pragma optimize("", off)
 
@@ -15,16 +17,55 @@ void ULSInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 }
 
-void ULSInventoryComponent::AddItem(const FItemData& ItemToAdd)
+ULSItemStack* ULSInventoryComponent::FindItem(const FDataTableRowHandle& ItemData)
 {
-	Items.Add(ItemToAdd);
+	ULSItemStack** Result = Items.FindByPredicate([&](ULSItemStack* Stack)
+	{
+		return Stack &&
+			Stack->ItemData.DataTable == ItemData.DataTable &&
+			Stack->ItemData.RowName == ItemData.RowName;
+	});
+
+	if (Result)
+	{
+		return *Result;
+	}
+
+	return nullptr;
 }
 
-bool ULSInventoryComponent::RemoveItem(const FItemData& ItemToRemove)
+ULSItemStack* ULSInventoryComponent::AddItem(const FDataTableRowHandle& ItemData, int32 Quantity)
 {
-	if (Items.Contains(ItemToRemove))
+	if (ItemData.IsNull())
 	{
-		Items.RemoveSingle(ItemToRemove);
+		LSDebug::Print(TEXT("Invalid ItemData passed to AddItem"));
+		return nullptr;
+	}
+
+	// Check if item already exists
+	ULSItemStack* ExistingStack = FindItem(ItemData);
+	if (ExistingStack)
+	{
+		ExistingStack->Quantity += Quantity;
+		return ExistingStack;
+	}
+
+	// Create new stack
+	ULSItemStack* NewStack = NewObject<ULSItemStack>(this);
+	if (NewStack)
+	{
+		NewStack->InitializeItem(ItemData, Quantity);
+		Items.Add(NewStack);
+	}
+
+	return NewStack;
+}
+
+bool ULSInventoryComponent::RemoveItem(ULSItemStack* ItemStack)
+{
+	if (ItemStack && Items.Contains(ItemStack))
+	{
+		Items.Remove(ItemStack);
 		return true;
 	}
 	

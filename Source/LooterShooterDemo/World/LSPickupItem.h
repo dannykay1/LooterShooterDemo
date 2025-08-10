@@ -32,6 +32,6 @@ public:
 	virtual void OnInteract_Implementation(ALSCharacter* InteractingCharacter) override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup", meta = (RowType = "FItemData"))
 	FDataTableRowHandle ItemRowHandle;
 };

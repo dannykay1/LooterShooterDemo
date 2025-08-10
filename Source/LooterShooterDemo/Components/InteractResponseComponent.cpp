@@ -31,4 +31,4 @@ void UInteractResponseComponent::Interact()
 	OnInteract.Broadcast(*ItemData);
 }
 
-#pragma optimize("", off)
+#pragma optimize("", on)
