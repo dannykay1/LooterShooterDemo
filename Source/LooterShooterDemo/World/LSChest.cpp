@@ -13,9 +13,6 @@
 ALSChest::ALSChest()
 {
 	PrimaryActorTick.bCanEverTick = false;
-
-	// Set default pickup class (make sure to assign your pickup BP in editor or code)
-	PickupItemClass = ALSPickupItem::StaticClass();
 }
 
 void ALSChest::BeginPlay()
@@ -53,12 +50,6 @@ void ALSChest::SpawnRandomItems()
 		FRotator SpawnRotation = FRotator::ZeroRotator;
 
 		ALSPickupItem* SpawnedItem = GetWorld()->SpawnActor<ALSPickupItem>(PickupItemClass, SpawnLocation, SpawnRotation);
-		if(SpawnedItem)
-		{
-			// Randomize item type per spawn
-			int32 RandType = UKismetMathLibrary::RandomIntegerInRange(0, 2);
-			//SpawnedItem->ItemType = static_cast<EItemType>(RandType);
-		}
 	}
 
 	LSDebug::Print(TEXT("Chest spawned items"));

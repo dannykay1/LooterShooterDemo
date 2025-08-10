@@ -32,15 +32,6 @@ public:
 	virtual void OnInteract_Implementation(ALSCharacter* InteractingCharacter) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Item")
-	EItemType ItemType;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Stats")
-	float Damage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Weapon Stats")
-	float FireRate;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Armor Stats")
-	float ArmorValue;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pickup")
+	FDataTableRowHandle ItemRowHandle;
 };
