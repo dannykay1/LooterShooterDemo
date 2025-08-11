@@ -10,12 +10,6 @@ ULSItemStack::ULSItemStack()
 	Quantity = 0;
 }
 
-void ULSItemStack::InitializeItem(const FDataTableRowHandle& InItemData, int32 InQuantity)
-{
-	ItemRowHandle = InItemData;
-	Quantity = InQuantity;
-}
-
 FItemData* ULSItemStack::GetItemData()
 {
 	if (ItemRowHandle.IsNull())
@@ -24,6 +18,23 @@ FItemData* ULSItemStack::GetItemData()
 	}
 
 	return ItemRowHandle.GetRow<FItemData>("ItemStack Lookup");
+}
+
+ULSInputConfig* ULSItemStack::GetInputConfig()
+{
+	FItemData* ItemData = GetItemData();
+	if (ItemData == nullptr)
+	{
+		return nullptr;
+	}
+
+	return ItemData->InputConfig;
+}
+
+void ULSItemStack::InitializeItem(const FDataTableRowHandle& InItemData, int32 InQuantity)
+{
+	ItemRowHandle = InItemData;
+	Quantity = InQuantity;
 }
 
 #pragma optimize("", on)

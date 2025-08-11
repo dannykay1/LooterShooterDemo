@@ -7,9 +7,11 @@
 #include "LooterShooterDemo/Data/LSItemData.h"
 #include "LSItemActor.generated.h"
 
+class ALSPlayerController;
 class UStaticMeshComponent;
 class USkeletalMeshComponent;
 class ULSItemStack;
+class ULSInputConfig;
 
 UCLASS()
 class LOOTERSHOOTERDEMO_API ALSItemActor : public AActor
@@ -25,7 +27,9 @@ protected:
 
 public:
 	FItemData* GetItemData();
+	ULSInputConfig* GetInputConfig();
 	void SetItemStack(ULSItemStack* InItemStack);
+	virtual void SetupInput(ALSPlayerController* PlayerController);
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "ItemActor")
 	void StartPrimaryAction();
@@ -50,6 +54,4 @@ public:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Items")
 	TObjectPtr<ULSItemStack> ItemStack;
-
-	
 };

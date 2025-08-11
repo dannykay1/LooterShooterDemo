@@ -2,8 +2,12 @@
 
 
 #include "LSItemActor.h"
+
+#include "EnhancedInputSubsystems.h"
 #include "LSItemStack.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
+#include "LooterShooterDemo/Controllers/LSPlayerController.h"
+#include "LooterShooterDemo/Data/LSInputConfig.h"
 
 #pragma optimize("", off)
 
@@ -60,6 +64,16 @@ FItemData* ALSItemActor::GetItemData()
 	return ItemStack->GetItemData();
 }
 
+ULSInputConfig* ALSItemActor::GetInputConfig()
+{
+	if (ItemStack == nullptr)
+	{
+		return nullptr;
+	}
+
+	return ItemStack->GetInputConfig();
+}
+
 void ALSItemActor::SetItemStack(ULSItemStack* InItemStack)
 {
 	if (InItemStack == nullptr)
@@ -68,6 +82,34 @@ void ALSItemActor::SetItemStack(ULSItemStack* InItemStack)
 	}
 
 	ItemStack = InItemStack;
+}
+
+void ALSItemActor::SetupInput(ALSPlayerController* PlayerController)
+{
+	if (PlayerController == nullptr)
+	{
+		return;
+	}
+
+	ULocalPlayer* LocalPlayer = PlayerController->GetLocalPlayer();
+	if (LocalPlayer == nullptr)
+	{
+		return;
+	}
+
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(LocalPlayer);
+	if (Subsystem == nullptr)
+	{
+		return;
+	}
+
+	ULSInputConfig* InputConfig = GetInputConfig();
+	if (InputConfig == nullptr)
+	{
+		return;
+	}
+
+	Subsystem->AddMappingContext(InputConfig->DefaultMappingContext, 1);
 }
 
 void ALSItemActor::StartPrimaryAction_Implementation()

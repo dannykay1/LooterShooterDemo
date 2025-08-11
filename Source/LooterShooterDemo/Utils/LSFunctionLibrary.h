@@ -17,13 +17,7 @@ class LOOTERSHOOTERDEMO_API ULSFunctionLibrary : public UBlueprintFunctionLibrar
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
-	static UInteractResponseComponent* GetInteractResponseComponent(AActor* SourceActor);
-
-	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
 	static ULSInventoryComponent* GetInventoryComponent(AActor* SourceActor);
-
-	UFUNCTION(BlueprintCallable, Category = "LS Function Library")
-	static ULSEquipmentComponent* GetEquipmentComponent(AActor* SourceActor);
 
 	UFUNCTION(BlueprintPure, Category = "LS Function Library")
 	static bool GetPlayerEyesViewPoint(AActor* Player, FVector& OutLocation, FRotator& OutRotation);

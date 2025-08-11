@@ -3,22 +3,10 @@
 
 #include "LSFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
-#include "LooterShooterDemo/Components/InteractResponseComponent.h"
 #include "LooterShooterDemo/Components/LSInventoryComponent.h"
-#include "LooterShooterDemo/Components/LSEquipmentComponent.h"
 #include "LooterShooterDemo/Components/LSInteractTraceComponent.h"
 
 #pragma optimize("", on)
-
-UInteractResponseComponent* ULSFunctionLibrary::GetInteractResponseComponent(AActor* SourceActor)
-{
-	if (SourceActor)
-	{
-		return nullptr;
-	}
-
-	return SourceActor->GetComponentByClass<UInteractResponseComponent>();
-}
 
 ULSInventoryComponent* ULSFunctionLibrary::GetInventoryComponent(AActor* SourceActor)
 {
@@ -28,16 +16,6 @@ ULSInventoryComponent* ULSFunctionLibrary::GetInventoryComponent(AActor* SourceA
 	}
 
 	return SourceActor->GetComponentByClass<ULSInventoryComponent>();
-}
-
-ULSEquipmentComponent* ULSFunctionLibrary::GetEquipmentComponent(AActor* SourceActor)
-{
-	if (SourceActor)
-	{
-		return nullptr;
-	}
-
-	return SourceActor->GetComponentByClass<ULSEquipmentComponent>();
 }
 
 bool ULSFunctionLibrary::GetPlayerEyesViewPoint(AActor* Player, FVector& OutLocation, FRotator& OutRotation)

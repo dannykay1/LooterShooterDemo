@@ -2,8 +2,6 @@
 
 
 #include "LSInventoryComponent.h"
-
-#include "LSEquipmentComponent.h"
 #include "LooterShooterDemo/LSDebugHelper.h"
 #include "LooterShooterDemo/Items/LSItemStack.h"
 
@@ -63,14 +61,6 @@ ULSItemStack* ULSInventoryComponent::AddItem(const FDataTableRowHandle& ItemData
 	{
 		return nullptr;
 	}
-
-	ULSEquipmentComponent* EquipmentComponent = GetOwner()->GetComponentByClass<ULSEquipmentComponent>();
-	if (EquipmentComponent == nullptr)
-	{
-		return nullptr;
-	}
-
-	EquipmentComponent->EquipItem(ItemStackData);
 
 	return NewStack;
 }
